@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>chat</title>
+</head>
+<body>
+    <div id="chat">
+
+    </div>
+    <input type="text" id="input">
+    <button id="send">send</button>
+</body>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+
+window.onload = () => 
+{
+
+var socket = io();
+var user_id = - Math.round(Math.random() * (1 - 999));
+
+
+var chat = document.getElementById('chat');
+var button = document.getElementById('send');
+var input = document.getElementById('input');
+
+    button.onclick = function(e)
+    {
+        let message = {
+            message: input.value,
+            time: Date.now(),
+            from: user_id,
+            to: 0
+        }
+        socket.emit('message' , message);
+    }
+
+    socket.on('message', function(msg){
+        console.log(msg);
+        var date = Date(msg.time);
+        var isMy = '';
+        if(msg.from == user_id)
+        {
+            isMy = 'я - ';
+        }
+
+        var mes = document.createElement('div');
+        mes.textContent = `${isMy}${msg.message} - ${date}` ;
+        chat.append(mes);
+    });
+
+    socket.on('connection' , function(socket){
+        alert();
+    });
+}
+
+
+</script>
+</html>
